@@ -1,0 +1,42 @@
+{
+  "name": "api-social-media-nodejs",
+  "version": "1.0.0",
+  "description": "rest api para una red social usando nodejs y mongodb",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server/server.js",
+    "start": "node server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrag-dev/api-red-social-nodejs.git"
+  },
+  "keywords": [
+    "red",
+    "social",
+    "nodejs",
+    "rest",
+    "api",
+    "express",
+    "js",
+    "mongodb"
+  ],
+  "author": "José Alvarado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jrag-dev/api-red-social-nodejs/issues"
+  },
+  "homepage": "https://github.com/jrag-dev/api-red-social-nodejs#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "mongoose": "^6.9.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
