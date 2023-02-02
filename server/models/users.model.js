@@ -2,24 +2,36 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 
+
 const userSchema = new Schema({
   username: {
     type: String,
     required: [true, "El nombre es requerido"],
-    min: 3,
-    max: 30,
+    trim: true,
+    validate: {
+      validator: function(password) {
+        return password.length >= 3 && password.length <= 30;
+      },
+      message: "El username debe contener entre 6 y 30 caracteres!!"
+    },
     unique: true
   },
   email: {
     type: String,
+    trim: true,
     unique: true,
+    lowercase: true,
+    index: {
+      unique: true
+    },
     required: [true, "El email es requerido"],
-    max: 50
+    maxLength: 50,
+    match: /.+\@.+\..+/
   },
   password: {
     type: String,
-    required: [true, "El password es requerido"],
-    min: 6
+    trim: true,
+    required: [true, "El password es requerido"]
   },
   profilePicture: {
     type: String,
@@ -45,5 +57,18 @@ const userSchema = new Schema({
 {
   timestamps: true
 })
+
+
+userSchema.methods.longPassword = function(password) {
+  return password.length >= 6;
+}
+
+userSchema.methods.toJSON = function() {
+  let user = this;
+  let userObject = user.toObject();
+  delete userObject.password;
+
+  return userObject;
+}
 
 module.exports = model("User", userSchema)

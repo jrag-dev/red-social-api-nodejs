@@ -3,6 +3,7 @@ require("dotenv").config();
 
 
 const dbConnect = async (uri) => {
+  mongoose.set('strictQuery', true)
   try {
     await mongoose.connect(uri);
     console.log("Conección a la base de datos activa")
