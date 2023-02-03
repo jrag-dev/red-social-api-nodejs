@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 
+let validRoles = {
+  values: ['ADMIN_ROLE', 'USER_ROLE'],
+  message: '{VALUE} no es un rol válido'
+}
 
 const userSchema = new Schema({
   username: {
@@ -49,9 +53,26 @@ const userSchema = new Schema({
     type: Array,
     default: []
   },
-  isAdmin: {
+  role: {
+    type: String,
+    enum: validRoles,
+    default: 'USER_ROLE'
+  },
+  state: {
     type: Boolean,
-    default: false
+    default: true
+  },
+  desc: {
+    type: String,
+    maxLength:50
+  },
+  from: {
+    type: String,
+    max: 50
+  },
+  relationship: {
+    type: Number,
+    enum: [1, 2, 3]
   }
 },
 {
