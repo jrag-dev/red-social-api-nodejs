@@ -200,5 +200,98 @@ routerUsers.put("/delete/:id", verifyToken, (req, res) => {
   }
 })
 
+// TODO: Follow (Seguir) a un usuario
+routerUsers.put("/:id/follow", verifyToken, async (req, res) => {
+  if (req.user._id !== req.params.id) {
+    try {
+      const user = await User.findOne({_id: req.params.id});
+      const currentUser = await User.findOne({_id: req.user._id});
+
+      if (!user) {
+        return res.status(404).json({
+          ok: false,
+          message: "Usuario no encontrado"
+        })
+      }
+
+      if (!user.followers.includes(req.user._id)) {
+        await user.updateOne({$push: { followers: req.user._id}});
+        await currentUser.updateOne({ $push: { followins: req.params.id }});
+
+
+        res.status(200).json({
+          ok: true,
+          message: "Usuario seguido a partir de este momento"
+        })
+      } else {
+        res.status(403).json({
+          ok: false,
+          message: "Ya sigues a este usuario"
+        })
+      }
+
+    } catch (err) {
+      res.status(500).json({
+        ok: false,
+        err: err
+      })
+    }
+  } else {
+    res.status(403).json({
+      ok: false,
+      message: "Sólo puedes seguir a otros usuarios"
+    })
+  }
+})
+
+
+
+
+// TODO: Unfollow (dejar de seguir) a un asuario
+routerUsers.put("/:id/unfollow", verifyToken, async (req, res) => {
+  if (req.user._id !== req.params.id) {
+    try {
+      const user = await User.findOne({_id: req.params.id});
+      const currentUser = await User.findOne({_id: req.user._id});
+
+      if (!user) {
+        return res.status(404).json({
+          ok: false,
+          message: "Usuario no encontrado"
+        })
+      }
+
+      if (user.followers.includes(req.user._id)) {
+        console.log("paso 3")
+        await user.updateOne({ $pull: { followers: req.user._id }});
+        await currentUser.updateOne({ $pull: { followins : req.params.id }});
+
+        console.log("paso 4")
+
+        res.status(200).json({
+          ok: true,
+          message: "Has dejado de seguir a este usuario"
+        })
+      } else {
+        res.status(403).json({
+          ok: false,
+          message: "No sigues a este usuario"
+        })
+      }
+      
+    } catch (err) {
+      res.status(500).json({
+        ok: false,
+        err: err
+      })
+    }
+  } else {
+    res.status(403).json({
+      ok: false,
+      message: "Sólo puedes dejar de seguir a otros usuarios"
+    })
+  }
+})
+
 
 module.exports = routerUsers;
